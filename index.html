@@ -38,7 +38,6 @@
 
     /* ── Tab bar ─────────────────────────────────────────────────────────────── */
     .tab-bar {
-      display: flex;
       border-bottom: 1px solid var(--border);
       margin-bottom: 28px;
       position: sticky;
@@ -47,6 +46,7 @@
       z-index: 20;
       padding-top: 8px;
     }
+    .tab-btn-row { display: flex; }
     .tab-btn {
       padding: 10px 22px;
       background: none;
@@ -63,6 +63,12 @@
     }
     .tab-btn:hover { color: var(--text); }
     .tab-btn.active { color: var(--text); border-bottom-color: var(--accent); }
+    .tab-desc {
+      font-size: 11px;
+      color: var(--muted);
+      padding: 6px 4px 8px;
+      letter-spacing: .01em;
+    }
 
     /* ── Stats strip ─────────────────────────────────────────────────────────── */
     .stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 28px; }
@@ -72,6 +78,7 @@
     .stat-value.blue   { color: var(--accent); }
     .stat-value.green  { color: #5db87a; }
     .stat-value.yellow { color: #c8a01e; }
+    .stat-value.purple { color: #9a7aff; }
 
     @media (max-width: 560px) {
       .stats { grid-template-columns: repeat(2, 1fr); }
@@ -205,13 +212,13 @@
     /* ── No results ──────────────────────────────────────────────────────────── */
     .no-results { text-align: center; padding: 40px 20px; color: var(--muted); font-size: 13px; }
 
-    /* ── Phase badge (Approach 2 table) ─────────────────────────────────────── */
+    /* ── Phase badge ─────────────────────────────────────────────────────────── */
     .phase-badge {
       display: inline-block;
       font-size: 11px;
-      color: var(--muted);
-      background: rgba(154,122,255,0.12);
-      border: 1px solid rgba(154,122,255,0.25);
+      color: #9a7aff;
+      background: rgba(154,122,255,0.10);
+      border: 1px solid rgba(154,122,255,0.22);
       border-radius: 4px;
       padding: 1px 7px;
       white-space: nowrap;
@@ -229,12 +236,15 @@
 
   <!-- Tab Bar -->
   <div class="tab-bar">
-    <button class="tab-btn active" data-tab="v1" onclick="switchTab('v1')">Approach 1 — Genre &amp; Tier</button>
-    <button class="tab-btn"        data-tab="v2" onclick="switchTab('v2')">Approach 2 — Timeline Flow</button>
+    <div class="tab-btn-row">
+      <button class="tab-btn active" data-tab="v1" onclick="switchTab('v1')">Open Mix</button>
+      <button class="tab-btn"        data-tab="v2" onclick="switchTab('v2')">Create the Flow</button>
+    </div>
+    <div class="tab-desc" id="tab-desc">100 songs across 8 genres and 4 tiers — browse, filter, and build your own set</div>
   </div>
 
   <!-- ═══════════════════════════════════════════════════════════════════════════
-       APPROACH 1 — Genre & Tier
+       OPEN MIX
   ════════════════════════════════════════════════════════════════════════════ -->
   <div id="tab1-content">
 
@@ -302,14 +312,14 @@
   </div><!-- /tab1-content -->
 
   <!-- ═══════════════════════════════════════════════════════════════════════════
-       APPROACH 2 — Timeline Flow
+       CREATE THE FLOW
   ════════════════════════════════════════════════════════════════════════════ -->
   <div id="tab2-content" style="display:none;">
 
     <div class="stats">
       <div class="stat"><div class="stat-value">100</div><div class="stat-label">Total Songs</div></div>
       <div class="stat"><div class="stat-value blue">10</div><div class="stat-label">Anchor Songs</div></div>
-      <div class="stat"><div class="stat-value" style="color:#9a7aff;">6</div><div class="stat-label">Reception Phases</div></div>
+      <div class="stat"><div class="stat-value purple">6</div><div class="stat-label">Reception Phases</div></div>
       <div class="stat"><div class="stat-value">~5 hrs</div><div class="stat-label">Timeline Coverage</div></div>
     </div>
 
@@ -337,28 +347,28 @@
       <h2>Phase Notes</h2>
       <div class="notes-grid">
         <div class="note-card">
-          <div class="note-title" style="color:#9a7aff;">Phase 1 — Cocktail Hour &amp; Mingle</div>
-          <div class="note-body">Warm, soulful, and conversational. Built around the smooth live-instrument feel of Olivia Dean's "Man I Need" and the timeless soul of Chris Stapleton's "Tennessee Whiskey." Guests are arriving and finding their seats — the music should feel welcoming, not demanding attention.</div>
+          <div class="note-title" style="color:#9a7aff;">Phase 1 — Arrival &amp; Cocktail</div>
+          <div class="note-body">Warm and background-friendly regardless of genre. The goal is music that welcomes guests and sets a celebratory mood without demanding attention. Songs from any era are welcome here as long as they work at low volume while people arrive, find seats, and start conversations.</div>
         </div>
         <div class="note-card">
-          <div class="note-title" style="color:#9a7aff;">Phase 2 — Dinner Hour</div>
-          <div class="note-body">Mid-tempo, feel-good classics people can sing along to while eating without having to shout. Transitions from smooth cocktail soul into the rhythmic pocket of 90s R&amp;B, anchored by 112's "Only You." Every table should recognize something.</div>
+          <div class="note-title" style="color:#9a7aff;">Phase 2 — Dinner</div>
+          <div class="note-body">Mid-tempo and recognizable — songs people can sing along to without shouting across the table. Genre doesn't matter; energy does. A 70s soul classic, a 2000s ballad, and a current pop track all belong here if they're familiar and sit at the right tempo.</div>
         </div>
         <div class="note-card">
-          <div class="note-title" style="color:#9a7aff;">Phase 3 — Slow Jams &amp; Late-Dinner Transition</div>
-          <div class="note-body">The vibe shifts into smooth bedroom-soul and mid-2000s nostalgia as dinner wraps up and the bar starts humming. Anchored by Kanye's "Slow Jamz" and Lloyd's "You." The floor isn't open yet but guests are moving toward it.</div>
+          <div class="note-title" style="color:#9a7aff;">Phase 3 — Warm-Up</div>
+          <div class="note-body">Energy building, floor-adjacent. People are finishing dinner and moving toward the bar — the music should make them feel like dancing is coming without fully committing yet. Any genre works here: 90s R&amp;B, 2000s hip-hop, classic funk, dance pop. The bar is "groovy but not yet a banger."</div>
         </div>
         <div class="note-card">
-          <div class="note-title" style="color:#9a7aff;">Phase 4 — Dance Party: Funk &amp; 80s Grooves</div>
-          <div class="note-body">Getting everyone onto the floor by kicking off the high-energy sets. This section channels the dance-floor magic of Michael Jackson's "PYT" and the heavy synth-bass of the Dazz Band's "Let It Whip." Deep funk roots reward dancers while remaining accessible to everyone.</div>
+          <div class="note-title" style="color:#9a7aff;">Phase 4 — Dance Floor Opens</div>
+          <div class="note-body">The floor is open and people are moving. This phase is mixed-genre by design — the DJ draws from funk, hip-hop, pop, and R&amp;B freely to keep the floor inclusive. Songs were chosen because they make people stand up, not because of their era or genre label.</div>
         </div>
         <div class="note-card">
-          <div class="note-title" style="color:#9a7aff;">Phase 5 — Dance Party: 90s / 2000s Peaks</div>
-          <div class="note-body">The absolute peak of the night — maximum energy riding the throwback bounce of Mark Morrison's "Return of the Mack" and the darker, pulsing club energy of Rihanna's "Disturbia." This block is for the couple and their generation at full intensity.</div>
+          <div class="note-title" style="color:#9a7aff;">Phase 5 — Peak Energy</div>
+          <div class="note-body">Maximum intensity for the top of the night. Again genre-agnostic: harder hip-hop, full-throttle rock, high-BPM dance pop all share this phase because they serve the same purpose — keeping a packed floor at full energy. The couple and their generation own this block.</div>
         </div>
         <div class="note-card">
-          <div class="note-title" style="color:#9a7aff;">Phase 6 — Final Stretch &amp; Grand Finale</div>
-          <div class="note-body">High-stakes, maximum-volume sing-alongs to close the night on an absolute high, culminating in Journey's "Don't Stop Believin'" — the undisputed king of room-closing anthems. Every song in this block should have the whole room singing.</div>
+          <div class="note-title" style="color:#9a7aff;">Phase 6 — Grand Finale</div>
+          <div class="note-body">Cross-generational, room-wide sing-alongs that feel like a send-off. The energy is still high but shifts from intensity to communal joy. Every song in this block should have the whole room — all ages — singing together as the night closes.</div>
         </div>
       </div>
     </div>
@@ -371,7 +381,7 @@
   <hr />
   <div class="section">
     <h2>Special Dance Suggestions</h2>
-    <p style="color:var(--muted);font-size:12px;margin-bottom:16px;">Additional song options for the three parent dances — not counted in either 100-song playlist. Click each section to expand.</p>
+    <p style="color:var(--muted);font-size:12px;margin-bottom:16px;">Additional song options for the three parent dances — not counted in either playlist. Click each section to expand.</p>
 
     <details>
       <summary><span class="chevron">&#9658;</span> Father of the Bride / Bride Dance <span class="dance-count">5</span></summary>
@@ -429,7 +439,7 @@
 </div><!-- /page -->
 
 <script>
-/* ─── Approach 1 data ──────────────────────────────────────────────────────── */
+/* ─── Open Mix data ────────────────────────────────────────────────────────── */
 const v1Songs = [
   { id:1,  title:"Don't Stop Believin'",           artist:"Journey",                               vibe:"Classic Rock",   tier:"required" },
   { id:2,  title:"Slow Jamz",                       artist:"Kanye West ft. Twista & Jamie Foxx",    vibe:"Hip-Hop",        tier:"required" },
@@ -541,7 +551,6 @@ const v1Tiers = [
   { value:"bridge",   label:"Blending",   cls:"green"  },
   { value:"extreme",  label:"Extreme",    cls:"yellow" },
 ];
-
 let v1Vibe = "All", v1Tier = "all";
 
 function v1RowClass(tier) {
@@ -554,25 +563,16 @@ function renderV1() {
     (v1Tier === "all" || s.tier === v1Tier)
   );
   document.getElementById("v1-count").textContent = filtered.length + " of 100 shown";
-
   const tbody = document.getElementById("v1-tbody");
   const noRes = document.getElementById("v1-no-results");
   if (filtered.length === 0) {
-    tbody.innerHTML = "";
-    noRes.style.display = "block";
+    tbody.innerHTML = ""; noRes.style.display = "block";
   } else {
     noRes.style.display = "none";
     tbody.innerHTML = filtered.map(s =>
-      `<tr class="${v1RowClass(s.tier)}">
-        <td class="td-num">${s.id}</td>
-        <td>${s.title}</td>
-        <td>${s.artist}</td>
-        <td class="td-meta">${s.vibe}</td>
-      </tr>`
+      `<tr class="${v1RowClass(s.tier)}"><td class="td-num">${s.id}</td><td>${s.title}</td><td>${s.artist}</td><td class="td-meta">${s.vibe}</td></tr>`
     ).join("");
   }
-
-  // Vibe pills
   const vp = document.getElementById("v1-vibe-pills");
   vp.innerHTML = "";
   v1Vibes.forEach(v => {
@@ -582,8 +582,6 @@ function renderV1() {
     b.onclick = () => { v1Vibe = v; renderV1(); };
     vp.appendChild(b);
   });
-
-  // Tier pills
   const tp = document.getElementById("v1-tier-pills");
   tp.innerHTML = "";
   v1Tiers.forEach(t => {
@@ -595,161 +593,149 @@ function renderV1() {
   });
 }
 
-/* ─── Approach 2 data ──────────────────────────────────────────────────────── */
+/* ─── Create the Flow data ─────────────────────────────────────────────────── */
 const v2Songs = [
-  // Phase 1 — Cocktail Hour & Mingle
-  { id:1,  title:"Man I Need",                      artist:"Olivia Dean",                            phase:1, required:true  },
-  { id:2,  title:"Tennessee Whiskey",               artist:"Chris Stapleton",                        phase:1, required:true  },
-  { id:3,  title:"Texas Sun",                       artist:"Leon Bridges & Khruangbin",              phase:1, required:false },
-  { id:4,  title:"Make It Better",                  artist:"Anderson .Paak ft. Smokey Robinson",     phase:1, required:false },
-  { id:5,  title:"Beyond",                          artist:"Leon Bridges",                           phase:1, required:false },
-  { id:6,  title:"Dive",                            artist:"Olivia Dean",                            phase:1, required:false },
-  { id:7,  title:"Leave the Door Open",             artist:"Silk Sonic",                             phase:1, required:false },
-  { id:8,  title:"Butter",                          artist:"Rayland Baxter",                         phase:1, required:false },
-  { id:9,  title:"Cruisin'",                        artist:"D'Angelo",                               phase:1, required:false },
-  { id:10, title:"Sunday Morning",                  artist:"Maroon 5",                               phase:1, required:false },
-  { id:11, title:"Gravity",                         artist:"John Mayer",                             phase:1, required:false },
-  { id:12, title:"Sitting on the Dock of the Bay",  artist:"Otis Redding",                           phase:1, required:false },
-  { id:13, title:"Harvest Moon",                    artist:"Neil Young",                             phase:1, required:false },
-  { id:14, title:"Prototype",                       artist:"Outkast",                                phase:1, required:false },
-  { id:15, title:"Sunrise",                         artist:"Norah Jones",                            phase:1, required:false },
-  { id:16, title:"River",                           artist:"Leon Bridges",                           phase:1, required:false },
-  { id:17, title:"Better",                          artist:"Khalid",                                 phase:1, required:false },
-  { id:18, title:"Yellow",                          artist:"Coldplay",                               phase:1, required:false },
-  { id:19, title:"Show Me",                         artist:"John Legend",                            phase:1, required:false },
-  // Phase 2 — Dinner Hour
-  { id:20, title:"Only You",                        artist:"112",                                    phase:2, required:true  },
-  { id:21, title:"If I Ain't Got You",              artist:"Alicia Keys",                            phase:2, required:false },
-  { id:22, title:"You Rock My World",               artist:"Michael Jackson",                        phase:2, required:false },
-  { id:23, title:"Just Friends (Sunny)",            artist:"Musiq Soulchild",                        phase:2, required:false },
-  { id:24, title:"Real Love",                       artist:"Mary J. Blige",                          phase:2, required:false },
-  { id:25, title:"Poison",                          artist:"Bell Biv DeVoe",                         phase:2, required:false },
-  { id:26, title:"Every Little Step",               artist:"Bobby Brown",                            phase:2, required:false },
-  { id:27, title:"Outstanding",                     artist:"The Gap Band",                           phase:2, required:false },
-  { id:28, title:"Golden",                          artist:"Jill Scott",                             phase:2, required:false },
-  { id:29, title:"No Diggity",                      artist:"Blackstreet ft. Dr. Dre",                phase:2, required:false },
-  { id:30, title:"Right Here (Human Nature Remix)", artist:"SWV",                                    phase:2, required:false },
-  { id:31, title:"Groovin'",                        artist:"The Young Rascals",                      phase:2, required:false },
-  { id:32, title:"My Girl",                         artist:"The Temptations",                        phase:2, required:false },
-  { id:33, title:"Lovely Day",                      artist:"Bill Withers",                           phase:2, required:false },
-  { id:34, title:"Let's Stay Together",             artist:"Al Green",                               phase:2, required:false },
-  { id:35, title:"Never Too Much",                  artist:"Luther Vandross",                        phase:2, required:false },
-  { id:36, title:"Always and Forever",              artist:"Heatwave",                               phase:2, required:false },
-  { id:37, title:"Before I Let Go",                 artist:"Frankie Beverly & Maze",                 phase:2, required:false },
-  { id:38, title:"Ribbon in the Sky",               artist:"Stevie Wonder",                          phase:2, required:false },
-  { id:39, title:"Haven't Met You Yet",             artist:"Michael Bublé",                          phase:2, required:false },
-  // Phase 3 — Slow Jams & Late-Dinner Transition
-  { id:40, title:"Slow Jamz",                       artist:"Kanye West ft. Jamie Foxx & Twista",     phase:3, required:true  },
-  { id:41, title:"You",                             artist:"Lloyd ft. Lil Wayne",                    phase:3, required:true  },
-  { id:42, title:"So Sick",                         artist:"Ne-Yo",                                  phase:3, required:false },
-  { id:43, title:"We Belong Together",              artist:"Mariah Carey",                           phase:3, required:false },
-  { id:44, title:"U Got It Bad",                    artist:"Usher",                                  phase:3, required:false },
-  { id:45, title:"Let's Get Married (Reception Remix)", artist:"Jagged Edge",                       phase:3, required:false },
-  { id:46, title:"Into You",                        artist:"Fabolous ft. Tamia",                     phase:3, required:false },
-  { id:47, title:"Beautiful",                       artist:"Snoop Dogg ft. Pharrell",                phase:3, required:false },
-  { id:48, title:"Caught Up",                       artist:"Usher",                                  phase:3, required:false },
-  { id:49, title:"Frontin'",                        artist:"Pharrell ft. Jay-Z",                     phase:3, required:false },
-  { id:50, title:"Differences",                     artist:"Ginuwine",                               phase:3, required:false },
-  { id:51, title:"Can't Get Enough of Your Love",   artist:"Barry White",                            phase:3, required:false },
-  { id:52, title:"Body Party",                      artist:"Ciara",                                  phase:3, required:false },
-  { id:53, title:"Stay",                            artist:"Rihanna ft. Mikky Ekko",                 phase:3, required:false },
-  // Phase 4 — Dance Party: Funk & 80s Grooves
-  { id:54, title:"PYT (Pretty Young Thing)",        artist:"Michael Jackson",                        phase:4, required:true  },
-  { id:55, title:"Let It Whip",                     artist:"Dazz Band",                              phase:4, required:true  },
-  { id:56, title:"Give It to Me Baby",              artist:"Rick James",                             phase:4, required:false },
-  { id:57, title:"September",                       artist:"Earth, Wind & Fire",                     phase:4, required:false },
-  { id:58, title:"Brick House",                     artist:"The Commodores",                         phase:4, required:false },
-  { id:59, title:"Wanna Be Startin' Somethin'",     artist:"Michael Jackson",                        phase:4, required:false },
-  { id:60, title:"I Wanna Dance with Somebody",     artist:"Whitney Houston",                        phase:4, required:false },
-  { id:61, title:"1999",                            artist:"Prince",                                 phase:4, required:false },
-  { id:62, title:"Ain't No Mountain High Enough",   artist:"Marvin Gaye & Tammi Terrell",            phase:4, required:false },
-  { id:63, title:"Le Freak",                        artist:"Chic",                                   phase:4, required:false },
-  { id:64, title:"Super Freak",                     artist:"Rick James",                             phase:4, required:false },
-  { id:65, title:"Flash Light",                     artist:"Parliament",                             phase:4, required:false },
-  { id:66, title:"Jungle Boogie",                   artist:"Kool & the Gang",                        phase:4, required:false },
-  { id:67, title:"Get Down on It",                  artist:"Kool & the Gang",                        phase:4, required:false },
-  { id:68, title:"Dancing in the Street",           artist:"Martha & The Vandellas",                 phase:4, required:false },
-  // Phase 5 — Dance Party: 90s / 2000s Peaks
-  { id:69, title:"Return of the Mack",              artist:"Mark Morrison",                          phase:5, required:true  },
-  { id:70, title:"Disturbia",                       artist:"Rihanna",                                phase:5, required:true  },
-  { id:71, title:"Yeah!",                           artist:"Usher ft. Lil Jon & Ludacris",           phase:5, required:false },
-  { id:72, title:"Gold Digger",                     artist:"Kanye West ft. Jamie Foxx",              phase:5, required:false },
-  { id:73, title:"Crazy in Love",                   artist:"Beyoncé ft. Jay-Z",                      phase:5, required:false },
-  { id:74, title:"In Da Club",                      artist:"50 Cent",                                phase:5, required:false },
-  { id:75, title:"Low",                             artist:"Flo Rida ft. T-Pain",                    phase:5, required:false },
-  { id:76, title:"This Is How We Do It",            artist:"Montell Jordan",                         phase:5, required:false },
-  { id:77, title:"Hey Ya!",                         artist:"Outkast",                                phase:5, required:false },
-  { id:78, title:"Get Low",                         artist:"Lil Jon & The East Side Boyz",           phase:5, required:false },
-  { id:79, title:"Buy U a Drank",                   artist:"T-Pain ft. Yung Joc",                    phase:5, required:false },
-  { id:80, title:"Toxic",                           artist:"Britney Spears",                         phase:5, required:false },
-  { id:81, title:"Club Can't Handle Me",            artist:"Flo Rida ft. David Guetta",              phase:5, required:false },
-  { id:82, title:"DJ Got Us Fallin' In Love",       artist:"Usher ft. Pitbull",                      phase:5, required:false },
-  { id:83, title:"Temperature",                     artist:"Sean Paul",                              phase:5, required:false },
-  { id:84, title:"Scream",                          artist:"Usher",                                  phase:5, required:false },
-  { id:85, title:"Irreplaceable",                   artist:"Beyoncé",                                phase:5, required:false },
-  { id:86, title:"Push It",                         artist:"Salt-N-Pepa",                            phase:5, required:false },
-  { id:87, title:"OMG",                             artist:"Usher ft. will.i.am",                    phase:5, required:false },
-  // Phase 6 — Final Stretch & Grand Finale
-  { id:88,  title:"Don't Stop Believin'",           artist:"Journey",                                phase:6, required:true  },
-  { id:89,  title:"Livin' on a Prayer",             artist:"Bon Jovi",                               phase:6, required:false },
-  { id:90,  title:"All Night Long (All Night)",     artist:"Lionel Richie",                          phase:6, required:false },
-  { id:91,  title:"Shut Up and Dance",              artist:"Walk the Moon",                          phase:6, required:false },
-  { id:92,  title:"Mr. Brightside",                 artist:"The Killers",                            phase:6, required:false },
-  { id:93,  title:"Sweet Caroline",                 artist:"Neil Diamond",                           phase:6, required:false },
-  { id:94,  title:"Signed, Sealed, Delivered",      artist:"Stevie Wonder",                          phase:6, required:false },
-  { id:95,  title:"One More Time",                  artist:"Daft Punk",                              phase:6, required:false },
-  { id:96,  title:"Last Dance",                     artist:"Donna Summer",                           phase:6, required:false },
-  { id:97,  title:"Bye Bye Bye",                    artist:"*NSYNC",                                 phase:6, required:false },
-  { id:98,  title:"Piano Man",                      artist:"Billy Joel",                             phase:6, required:false },
-  { id:99,  title:"American Pie",                   artist:"Don McLean",                             phase:6, required:false },
-  { id:100, title:"Jump",                           artist:"Kris Kross",                             phase:6, required:false },
+  // Phase 1 — Arrival & Cocktail (18 songs) — warm, low-energy, any genre
+  { id:1,  title:"Man I Need",                      artist:"Olivia Dean",                           phase:1, required:true  },
+  { id:2,  title:"Tennessee Whiskey",               artist:"Chris Stapleton",                       phase:1, required:true  },
+  { id:3,  title:"Texas Sun",                       artist:"Leon Bridges & Khruangbin",             phase:1, required:false },
+  { id:4,  title:"Leave the Door Open",             artist:"Silk Sonic",                            phase:1, required:false },
+  { id:5,  title:"Gravity",                         artist:"John Mayer",                            phase:1, required:false },
+  { id:6,  title:"Sunday Morning",                  artist:"Maroon 5",                              phase:1, required:false },
+  { id:7,  title:"Harvest Moon",                    artist:"Neil Young",                            phase:1, required:false },
+  { id:8,  title:"Sunrise",                         artist:"Norah Jones",                           phase:1, required:false },
+  { id:9,  title:"River",                           artist:"Leon Bridges",                          phase:1, required:false },
+  { id:10, title:"Yellow",                          artist:"Coldplay",                              phase:1, required:false },
+  { id:11, title:"Better Together",                 artist:"Jack Johnson",                          phase:1, required:false },
+  { id:12, title:"Cruisin'",                        artist:"D'Angelo",                              phase:1, required:false },
+  { id:13, title:"Sitting on the Dock of the Bay",  artist:"Otis Redding",                          phase:1, required:false },
+  { id:14, title:"Golden",                          artist:"Jill Scott",                            phase:1, required:false },
+  { id:15, title:"Die With You",                    artist:"Beyoncé",                               phase:1, required:false },
+  { id:16, title:"Can't Help Falling in Love",      artist:"Elvis Presley",                         phase:1, required:false },
+  { id:17, title:"Ribbon in the Sky",               artist:"Stevie Wonder",                         phase:1, required:false },
+  { id:18, title:"At Last",                         artist:"Etta James",                            phase:1, required:false },
+  // Phase 2 — Dinner (18 songs) — mid-tempo, singable, any genre
+  { id:19, title:"Only You",                        artist:"112",                                   phase:2, required:true  },
+  { id:20, title:"My Girl",                         artist:"The Temptations",                       phase:2, required:false },
+  { id:21, title:"Lovely Day",                      artist:"Bill Withers",                          phase:2, required:false },
+  { id:22, title:"Let's Stay Together",             artist:"Al Green",                              phase:2, required:false },
+  { id:23, title:"If I Ain't Got You",              artist:"Alicia Keys",                           phase:2, required:false },
+  { id:24, title:"Never Too Much",                  artist:"Luther Vandross",                       phase:2, required:false },
+  { id:25, title:"Always and Forever",              artist:"Heatwave",                              phase:2, required:false },
+  { id:26, title:"Before I Let Go",                 artist:"Frankie Beverly & Maze",                phase:2, required:false },
+  { id:27, title:"You Rock My World",               artist:"Michael Jackson",                       phase:2, required:false },
+  { id:28, title:"Real Love",                       artist:"Mary J. Blige",                         phase:2, required:false },
+  { id:29, title:"Brown Eyed Girl",                 artist:"Van Morrison",                          phase:2, required:false },
+  { id:30, title:"Wonderful Tonight",               artist:"Eric Clapton",                          phase:2, required:false },
+  { id:31, title:"All of Me",                       artist:"John Legend",                           phase:2, required:false },
+  { id:32, title:"Thinking Out Loud",               artist:"Ed Sheeran",                            phase:2, required:false },
+  { id:33, title:"Haven't Met You Yet",             artist:"Michael Bublé",                         phase:2, required:false },
+  { id:34, title:"Groovin'",                        artist:"The Young Rascals",                     phase:2, required:false },
+  { id:35, title:"Best Part",                       artist:"Daniel Caesar ft. H.E.R.",              phase:2, required:false },
+  { id:36, title:"Die a Happy Man",                 artist:"Thomas Rhett",                          phase:2, required:false },
+  // Phase 3 — Warm-Up (16 songs) — groovy, building energy, any genre
+  { id:37, title:"Slow Jamz",                       artist:"Kanye West ft. Jamie Foxx & Twista",    phase:3, required:true  },
+  { id:38, title:"You",                             artist:"Lloyd ft. Lil Wayne",                   phase:3, required:true  },
+  { id:39, title:"So Sick",                         artist:"Ne-Yo",                                 phase:3, required:false },
+  { id:40, title:"We Belong Together",              artist:"Mariah Carey",                          phase:3, required:false },
+  { id:41, title:"U Got It Bad",                    artist:"Usher",                                 phase:3, required:false },
+  { id:42, title:"No Scrubs",                       artist:"TLC",                                   phase:3, required:false },
+  { id:43, title:"Say My Name",                     artist:"Destiny's Child",                       phase:3, required:false },
+  { id:44, title:"My Boo",                          artist:"Usher ft. Alicia Keys",                 phase:3, required:false },
+  { id:45, title:"Poison",                          artist:"Bell Biv DeVoe",                        phase:3, required:false },
+  { id:46, title:"Outstanding",                     artist:"The Gap Band",                          phase:3, required:false },
+  { id:47, title:"No Diggity",                      artist:"Blackstreet ft. Dr. Dre",               phase:3, required:false },
+  { id:48, title:"Let's Get Married (Reception Remix)", artist:"Jagged Edge",                      phase:3, required:false },
+  { id:49, title:"Differences",                     artist:"Ginuwine",                              phase:3, required:false },
+  { id:50, title:"Caught Up",                       artist:"Usher",                                 phase:3, required:false },
+  { id:51, title:"Body Party",                      artist:"Ciara",                                 phase:3, required:false },
+  { id:52, title:"Frontin'",                        artist:"Pharrell ft. Jay-Z",                    phase:3, required:false },
+  // Phase 4 — Dance Floor Opens (18 songs) — high energy, any genre, crowd-inclusive
+  { id:53, title:"PYT (Pretty Young Thing)",        artist:"Michael Jackson",                       phase:4, required:true  },
+  { id:54, title:"Let It Whip",                     artist:"Dazz Band",                             phase:4, required:true  },
+  { id:55, title:"Return of the Mack",              artist:"Mark Morrison",                         phase:4, required:true  },
+  { id:56, title:"September",                       artist:"Earth, Wind & Fire",                    phase:4, required:false },
+  { id:57, title:"Uptown Funk",                     artist:"Mark Ronson ft. Bruno Mars",            phase:4, required:false },
+  { id:58, title:"Yeah!",                           artist:"Usher ft. Lil Jon & Ludacris",          phase:4, required:false },
+  { id:59, title:"Can't Stop the Feeling",          artist:"Justin Timberlake",                     phase:4, required:false },
+  { id:60, title:"I Wanna Dance with Somebody",     artist:"Whitney Houston",                       phase:4, required:false },
+  { id:61, title:"24K Magic",                       artist:"Bruno Mars",                            phase:4, required:false },
+  { id:62, title:"Crazy in Love",                   artist:"Beyoncé",                               phase:4, required:false },
+  { id:63, title:"Good as Hell",                    artist:"Lizzo",                                 phase:4, required:false },
+  { id:64, title:"Happy",                           artist:"Pharrell Williams",                     phase:4, required:false },
+  { id:65, title:"Shake It Off",                    artist:"Taylor Swift",                          phase:4, required:false },
+  { id:66, title:"Play That Funky Music",           artist:"Wild Cherry",                           phase:4, required:false },
+  { id:67, title:"Brick House",                     artist:"The Commodores",                        phase:4, required:false },
+  { id:68, title:"Jump Around",                     artist:"House of Pain",                         phase:4, required:false },
+  { id:69, title:"Gold Digger",                     artist:"Kanye West ft. Jamie Foxx",             phase:4, required:false },
+  { id:70, title:"This Is How We Do It",            artist:"Montell Jordan",                        phase:4, required:false },
+  // Phase 5 — Peak Energy (17 songs) — maximum intensity, any genre
+  { id:71, title:"Disturbia",                       artist:"Rihanna",                               phase:5, required:true  },
+  { id:72, title:"HUMBLE.",                         artist:"Kendrick Lamar",                        phase:5, required:false },
+  { id:73, title:"Sicko Mode",                      artist:"Travis Scott ft. Drake",                phase:5, required:false },
+  { id:74, title:"Back in Black",                   artist:"AC/DC",                                 phase:5, required:false },
+  { id:75, title:"Welcome to the Jungle",           artist:"Guns N' Roses",                         phase:5, required:false },
+  { id:76, title:"Thunderstruck",                   artist:"AC/DC",                                 phase:5, required:false },
+  { id:77, title:"Pour Some Sugar on Me",           artist:"Def Leppard",                           phase:5, required:false },
+  { id:78, title:"Low",                             artist:"Flo Rida ft. T-Pain",                   phase:5, required:false },
+  { id:79, title:"In Da Club",                      artist:"50 Cent",                               phase:5, required:false },
+  { id:80, title:"Hey Ya!",                         artist:"Outkast",                               phase:5, required:false },
+  { id:81, title:"Work It",                         artist:"Missy Elliott",                         phase:5, required:false },
+  { id:82, title:"About Damn Time",                 artist:"Lizzo",                                 phase:5, required:false },
+  { id:83, title:"Temperature",                     artist:"Sean Paul",                             phase:5, required:false },
+  { id:84, title:"Push It",                         artist:"Salt-N-Pepa",                           phase:5, required:false },
+  { id:85, title:"Levitating",                      artist:"Dua Lipa",                              phase:5, required:false },
+  { id:86, title:"Blinding Lights",                 artist:"The Weeknd",                            phase:5, required:false },
+  { id:87, title:"Give Up the Funk",                artist:"Parliament",                            phase:5, required:false },
+  // Phase 6 — Grand Finale (13 songs) — communal, sing-along, all ages
+  { id:88,  title:"Don't Stop Believin'",           artist:"Journey",                               phase:6, required:true  },
+  { id:89,  title:"Livin' on a Prayer",             artist:"Bon Jovi",                              phase:6, required:false },
+  { id:90,  title:"All Night Long (All Night)",     artist:"Lionel Richie",                         phase:6, required:false },
+  { id:91,  title:"Sweet Caroline",                 artist:"Neil Diamond",                          phase:6, required:false },
+  { id:92,  title:"Mr. Brightside",                 artist:"The Killers",                           phase:6, required:false },
+  { id:93,  title:"Shut Up and Dance",              artist:"Walk the Moon",                         phase:6, required:false },
+  { id:94,  title:"Signed, Sealed, Delivered",      artist:"Stevie Wonder",                         phase:6, required:false },
+  { id:95,  title:"American Pie",                   artist:"Don McLean",                            phase:6, required:false },
+  { id:96,  title:"Piano Man",                      artist:"Billy Joel",                            phase:6, required:false },
+  { id:97,  title:"One More Time",                  artist:"Daft Punk",                             phase:6, required:false },
+  { id:98,  title:"We Are Family",                  artist:"Sister Sledge",                         phase:6, required:false },
+  { id:99,  title:"Africa",                         artist:"Toto",                                  phase:6, required:false },
+  { id:100, title:"Dancing Queen",                  artist:"ABBA",                                  phase:6, required:false },
 ];
 
 const phaseLabels = {
   1: "1 — Cocktail",
   2: "2 — Dinner",
-  3: "3 — Slow Jams",
-  4: "4 — Funk / 80s",
-  5: "5 — 90s / 2000s",
+  3: "3 — Warm-Up",
+  4: "4 — Dance Floor",
+  5: "5 — Peak",
   6: "6 — Finale",
 };
 
 const v2Phases = [
-  { value:"all", label:"All Phases" },
-  { value:"1",   label:"Phase 1 — Cocktail"    },
-  { value:"2",   label:"Phase 2 — Dinner"      },
-  { value:"3",   label:"Phase 3 — Slow Jams"   },
-  { value:"4",   label:"Phase 4 — Funk / 80s"  },
-  { value:"5",   label:"Phase 5 — 90s / 2000s" },
-  { value:"6",   label:"Phase 6 — Finale"      },
+  { value:"all", label:"All Phases"              },
+  { value:"1",   label:"Phase 1 — Cocktail"      },
+  { value:"2",   label:"Phase 2 — Dinner"        },
+  { value:"3",   label:"Phase 3 — Warm-Up"       },
+  { value:"4",   label:"Phase 4 — Dance Floor"   },
+  { value:"5",   label:"Phase 5 — Peak Energy"   },
+  { value:"6",   label:"Phase 6 — Grand Finale"  },
 ];
-
 let v2Phase = "all";
 
 function renderV2() {
-  const filtered = v2Songs.filter(s =>
-    v2Phase === "all" || String(s.phase) === v2Phase
-  );
+  const filtered = v2Songs.filter(s => v2Phase === "all" || String(s.phase) === v2Phase);
   document.getElementById("v2-count").textContent = filtered.length + " of 100 shown";
-
   const tbody = document.getElementById("v2-tbody");
   const noRes = document.getElementById("v2-no-results");
   if (filtered.length === 0) {
-    tbody.innerHTML = "";
-    noRes.style.display = "block";
+    tbody.innerHTML = ""; noRes.style.display = "block";
   } else {
     noRes.style.display = "none";
     tbody.innerHTML = filtered.map(s =>
-      `<tr class="${s.required ? 'req' : ''}">
-        <td class="td-num">${s.id}</td>
-        <td>${s.title}</td>
-        <td>${s.artist}</td>
-        <td><span class="phase-badge">${phaseLabels[s.phase]}</span></td>
-      </tr>`
+      `<tr class="${s.required ? 'req' : ''}"><td class="td-num">${s.id}</td><td>${s.title}</td><td>${s.artist}</td><td><span class="phase-badge">${phaseLabels[s.phase]}</span></td></tr>`
     ).join("");
   }
-
-  // Phase pills
   const pp = document.getElementById("v2-phase-pills");
   pp.innerHTML = "";
   v2Phases.forEach(p => {
@@ -762,12 +748,18 @@ function renderV2() {
 }
 
 /* ─── Tab switching ────────────────────────────────────────────────────────── */
+const tabDescs = {
+  v1: "100 songs across 8 genres and 4 tiers — browse, filter, and build your own set",
+  v2: "100 songs sequenced across 6 reception phases — a guided arc from arrival to last call"
+};
+
 function switchTab(tab) {
   document.getElementById("tab1-content").style.display = tab === "v1" ? "block" : "none";
   document.getElementById("tab2-content").style.display = tab === "v2" ? "block" : "none";
   document.querySelectorAll(".tab-btn").forEach(btn => {
     btn.classList.toggle("active", btn.dataset.tab === tab);
   });
+  document.getElementById("tab-desc").textContent = tabDescs[tab];
 }
 
 /* ─── Init ─────────────────────────────────────────────────────────────────── */
