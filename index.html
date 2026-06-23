@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Wedding Reception Playlist</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:        #1a1a1a;
+      --surface:   #242424;
+      --border:    #333;
+      --text:      #e8e8e8;
+      --muted:     #888;
+      --accent:    #4a9eff;
+      --green:     #3a8a5a;
+      --yellow:    #8a7a20;
+      --row-req:   rgba(74, 158, 255, 0.10);
+      --row-bri:   rgba(58, 138, 90,  0.12);
+      --row-ext:   rgba(200, 160, 30, 0.12);
+      --stripe:    rgba(255,255,255,0.03);
+      --pill-bg:   #2e2e2e;
+      --pill-act:  #3a3a3a;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    .page { max-width: 960px; margin: 0 auto; padding: 28px 20px 60px; }
+
+    /* ── Header ─────────────────────────────────────────────────────────────── */
+    h1 { font-size: 22px; font-weight: 700; margin-bottom: 4px; }
+    .subtitle { color: var(--muted); margin-bottom: 24px; }
+
+    /* ── Stats strip ─────────────────────────────────────────────────────────── */
+    .stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 28px; }
+    .stat { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 14px 16px; }
+    .stat-value { font-size: 26px; font-weight: 700; line-height: 1; margin-bottom: 4px; }
+    .stat-label { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: .05em; }
+    .stat-value.blue   { color: var(--accent); }
+    .stat-value.green  { color: #5db87a; }
+    .stat-value.yellow { color: #c8a01e; }
+
+    @media (max-width: 560px) {
+      .stats { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    /* ── Section headings ────────────────────────────────────────────────────── */
+    h2 { font-size: 15px; font-weight: 600; margin-bottom: 10px; }
+    .section { margin-bottom: 28px; }
+
+    /* ── Filter pills ────────────────────────────────────────────────────────── */
+    .filter-label { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: .05em; margin-bottom: 8px; }
+    .pills { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 14px; }
+
+    .pill {
+      cursor: pointer;
+      border: 1px solid var(--border);
+      background: var(--pill-bg);
+      color: var(--text);
+      border-radius: 20px;
+      padding: 4px 14px;
+      font-size: 12px;
+      font-weight: 500;
+      transition: background 0.1s, border-color 0.1s, color 0.1s;
+      user-select: none;
+    }
+    .pill:hover { background: var(--pill-act); }
+    .pill.active { background: #2a3a50; border-color: var(--accent); color: var(--accent); }
+    .pill.active.green  { background: #1e3028; border-color: #5db87a; color: #5db87a; }
+    .pill.active.yellow { background: #2e2800; border-color: #c8a01e; color: #c8a01e; }
+
+    /* ── Legend ──────────────────────────────────────────────────────────────── */
+    .legend {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 10px 14px;
+      font-size: 12px;
+      color: var(--muted);
+      margin-bottom: 14px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      align-items: center;
+    }
+    .legend-dot { display: inline-block; width: 10px; height: 10px; border-radius: 2px; margin-right: 5px; vertical-align: middle; }
+    .dot-blue   { background: rgba(74, 158, 255, 0.45); border: 1px solid rgba(74,158,255,.6); }
+    .dot-green  { background: rgba(58, 138, 90,  0.45); border: 1px solid rgba(58,138,90,.6);  }
+    .dot-yellow { background: rgba(200,160, 30,  0.45); border: 1px solid rgba(200,160,30,.6); }
+    .dot-none   { background: rgba(255,255,255,0.06); border: 1px solid var(--border); }
+
+    /* ── Result count ────────────────────────────────────────────────────────── */
+    .result-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+    .result-count { font-size: 12px; color: var(--muted); }
+
+    /* ── Table ───────────────────────────────────────────────────────────────── */
+    .table-wrap { overflow-x: auto; border: 1px solid var(--border); border-radius: 8px; }
+    table { width: 100%; border-collapse: collapse; }
+    thead th {
+      position: sticky; top: 0; z-index: 1;
+      background: #2a2a2a;
+      border-bottom: 1px solid var(--border);
+      padding: 9px 12px;
+      text-align: left;
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: .05em;
+      color: var(--muted);
+      white-space: nowrap;
+    }
+    thead th.right { text-align: right; }
+    tbody tr td {
+      padding: 8px 12px;
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+      vertical-align: middle;
+    }
+    tbody tr:last-child td { border-bottom: none; }
+    tbody tr:nth-child(even) { background: var(--stripe); }
+    tbody tr.req  { background: var(--row-req); }
+    tbody tr.bri  { background: var(--row-bri); }
+    tbody tr.ext  { background: var(--row-ext); }
+    .td-num { text-align: right; color: var(--muted); font-variant-numeric: tabular-nums; width: 40px; }
+    .td-vibe { color: var(--muted); font-size: 12px; white-space: nowrap; }
+
+    /* ── Divider ─────────────────────────────────────────────────────────────── */
+    hr { border: none; border-top: 1px solid var(--border); margin: 32px 0; }
+
+    /* ── Special dances ──────────────────────────────────────────────────────── */
+    details { margin-bottom: 1px; }
+    summary {
+      list-style: none;
+      cursor: pointer;
+      padding: 10px 0;
+      border-bottom: 1px solid var(--border);
+      font-weight: 500;
+      font-size: 13px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      user-select: none;
+    }
+    summary::-webkit-details-marker { display: none; }
+    .chevron { color: var(--muted); font-size: 11px; transition: transform 0.15s; display: inline-block; }
+    details[open] .chevron { transform: rotate(90deg); }
+    .dance-count {
+      margin-left: auto;
+      font-size: 11px;
+      color: var(--muted);
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1px 8px;
+    }
+    .dance-table-wrap { padding: 12px 0 8px; }
+    .dance-table-wrap table thead th { background: var(--bg); }
+
+    /* ── Curation notes ──────────────────────────────────────────────────────── */
+    .notes-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    @media (max-width: 620px) { .notes-grid { grid-template-columns: 1fr; } }
+    .note-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 14px 16px;
+    }
+    .note-title { font-size: 12px; font-weight: 600; margin-bottom: 6px; color: var(--text); }
+    .note-body  { font-size: 12px; color: var(--muted); line-height: 1.6; }
+
+    /* ── No results ──────────────────────────────────────────────────────────── */
+    .no-results { text-align: center; padding: 40px 20px; color: var(--muted); font-size: 13px; }
+  </style>
+</head>
+<body>
+<div class="page">
+
+  <!-- Header -->
+  <h1>Wedding Reception Playlist</h1>
+  <p class="subtitle">100 songs curated for a multi-generational dance floor</p>
+
+  <!-- Stats -->
+  <div class="stats">
+    <div class="stat"><div class="stat-value">100</div><div class="stat-label">Total Songs</div></div>
+    <div class="stat"><div class="stat-value blue">10</div><div class="stat-label">Couple's Required</div></div>
+    <div class="stat"><div class="stat-value green">8</div><div class="stat-label">Blending Songs</div></div>
+    <div class="stat"><div class="stat-value yellow">12</div><div class="stat-label">Genre-Extreme Songs</div></div>
+  </div>
+
+  <!-- Filters -->
+  <div class="section">
+    <h2>Song List</h2>
+
+    <div class="filter-label">Filter by Vibe</div>
+    <div class="pills" id="vibe-pills"></div>
+
+    <div class="filter-label">Filter by Tier</div>
+    <div class="pills" id="tier-pills"></div>
+
+    <div class="legend">
+      <span><span class="legend-dot dot-blue"></span>Required by couple</span>
+      <span><span class="legend-dot dot-green"></span>Blending / bridge</span>
+      <span><span class="legend-dot dot-yellow"></span>Genre-extreme</span>
+      <span><span class="legend-dot dot-none"></span>Standard selection</span>
+    </div>
+
+    <div class="result-row">
+      <div></div>
+      <div class="result-count" id="result-count"></div>
+    </div>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th class="right">#</th>
+            <th>Title</th>
+            <th>Artist</th>
+            <th>Vibe</th>
+          </tr>
+        </thead>
+        <tbody id="song-tbody"></tbody>
+      </table>
+      <div class="no-results" id="no-results" style="display:none;">No songs match the selected filters.</div>
+    </div>
+  </div>
+
+  <hr />
+
+  <!-- Special Dances -->
+  <div class="section">
+    <h2>Special Dance Suggestions</h2>
+    <p style="color:var(--muted);font-size:12px;margin-bottom:16px;">Additional song options for the three parent dances — not counted in the 100-song playlist. Click each section to expand.</p>
+
+    <details>
+      <summary><span class="chevron">&#9658;</span> Father of the Bride / Bride Dance <span class="dance-count">5</span></summary>
+      <div class="dance-table-wrap">
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Title</th><th>Artist</th><th>Notes</th></tr></thead>
+            <tbody>
+              <tr><td>My Girl</td><td>The Temptations</td><td style="color:var(--muted);font-size:12px;">Timeless, universally recognized, works for any crowd</td></tr>
+              <tr><td>Isn't She Lovely</td><td>Stevie Wonder</td><td style="color:var(--muted);font-size:12px;">Joyful and celebratory — great for a dancer's reception</td></tr>
+              <tr><td>I Loved Her First</td><td>Heartland</td><td style="color:var(--muted);font-size:12px;">Country — written specifically for this moment</td></tr>
+              <tr><td>My Wish</td><td>Rascal Flatts</td><td style="color:var(--muted);font-size:12px;">Forward-looking lyrics, emotionally resonant</td></tr>
+              <tr><td>Daughters</td><td>John Mayer</td><td style="color:var(--muted);font-size:12px;">Softer and introspective — best if the bride is a JM fan</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="chevron">&#9658;</span> Mother of the Bride / Bride Dance <span class="dance-count">4</span></summary>
+      <div class="dance-table-wrap">
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Title</th><th>Artist</th><th>Notes</th></tr></thead>
+            <tbody>
+              <tr><td>In My Daughter's Eyes</td><td>Martina McBride</td><td style="color:var(--muted);font-size:12px;">Written for exactly this dance — no ambiguity</td></tr>
+              <tr><td>A Song for Mama</td><td>Boyz II Men</td><td style="color:var(--muted);font-size:12px;">Fits the couple's R&amp;B sensibility; works for either mother dance</td></tr>
+              <tr><td>Wind Beneath My Wings</td><td>Bette Midler</td><td style="color:var(--muted);font-size:12px;">Classic emotional choice — resonates with the older parent generation</td></tr>
+              <tr><td>Forever Young</td><td>Rod Stewart</td><td style="color:var(--muted);font-size:12px;">Bittersweet and hopeful; perfect as a send-off</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="chevron">&#9658;</span> Mother of the Groom / Groom Dance <span class="dance-count">4</span></summary>
+      <div class="dance-table-wrap">
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Title</th><th>Artist</th><th>Notes</th></tr></thead>
+            <tbody>
+              <tr><td>A Song for Mama</td><td>Boyz II Men</td><td style="color:var(--muted);font-size:12px;">Strong R&amp;B pick that echoes the reception's overall feel</td></tr>
+              <tr><td>You Raise Me Up</td><td>Josh Groban</td><td style="color:var(--muted);font-size:12px;">Uplifting; broad generational appeal across 40s–60s parents</td></tr>
+              <tr><td>What a Wonderful World</td><td>Louis Armstrong</td><td style="color:var(--muted);font-size:12px;">Gentle and classic — works well for a tender slow moment</td></tr>
+              <tr><td>Have You Ever Really Loved a Woman</td><td>Bryan Adams</td><td style="color:var(--muted);font-size:12px;">Underused for this dance but heartfelt and well-known</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </details>
+  </div>
+
+  <hr />
+
+  <!-- Curation Notes -->
+  <div class="section">
+    <h2>Curation Notes</h2>
+    <div class="notes-grid">
+      <div class="note-card">
+        <div class="note-title">Genre Diversity</div>
+        <div class="note-body">The couple's 10 required songs already span classic rock, hip-hop, R&amp;B, funk, country, and neo-soul. Every additional song reinforces one of these pillars so the playlist feels deliberate rather than scattered.</div>
+      </div>
+      <div class="note-card">
+        <div class="note-title">Generational Range</div>
+        <div class="note-body">With guests spanning multiple generations, the playlist covers five decades. Older guests get Stevie Wonder, Bon Jovi, and Etta James; the couple and their peers have Drake, Dua Lipa, and Lizzo. Cross-generational crowd-pleasers like September and Uptown Funk bridge every age group.</div>
+      </div>
+      <div class="note-card">
+        <div class="note-title" style="color:#5db87a;">Blending Songs (8)</div>
+        <div class="note-body">These 8 songs sit intentionally between genres. Old Town Road merges country and hip-hop in a single track. Valerie and Come and Get Your Love let a DJ pivot from soul into rock or funk without a jarring jump. Smooth and Moves Like Jagger serve as rock entries that feel accessible to R&amp;B-leaning guests.</div>
+      </div>
+      <div class="note-card">
+        <div class="note-title" style="color:#c8a01e;">Genre-Extreme Songs (12)</div>
+        <div class="note-body">These 12 push each genre toward its harder, rawer, or more traditional edge. HUMBLE., Sicko Mode, and Power bring real hip-hop intensity. Jolene, Friends in Low Places, and The House That Built Me are classic country without pop polish. Back in Black, Thunderstruck, Welcome to the Jungle, and Pour Some Sugar on Me are full-throttle rock. Give Up the Funk and Try a Little Tenderness go deep into genre roots.</div>
+      </div>
+      <div class="note-card">
+        <div class="note-title">Dance Floor Energy Arc</div>
+        <div class="note-body">A reception needs pacing: a warm opening (Romantic, Country, Neo-Soul), a ramp-up (90s R&amp;B, Hip-Hop), a peak floor (Funk/Disco, Dance Pop), and a wind-down close. The 100-song depth gives the DJ flexibility to read the room without repeating songs.</div>
+      </div>
+      <div class="note-card">
+        <div class="note-title">Bride's Dance Background</div>
+        <div class="note-body">Because the bride competed in dance team, selections favor strong rhythmic foundations — syncopated bass lines and groove-heavy arrangements — not just lyrical sentiment. The Funk/Disco and 90s R&amp;B blocks in particular reward a dancer who knows how to move to a pocket groove.</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  const songs = [
+    // Required
+    { id:1,  title:"Don't Stop Believin'",           artist:"Journey",                               vibe:"Classic Rock",   tier:"required" },
+    { id:2,  title:"Slow Jamz",                       artist:"Kanye West ft. Twista & Jamie Foxx",    vibe:"Hip-Hop",        tier:"required" },
+    { id:3,  title:"Man I Need",                      artist:"Olivia Dean",                           vibe:"R&B / Neo-Soul", tier:"required" },
+    { id:4,  title:"Return of the Mack",              artist:"Mark Morrison",                         vibe:"90s R&B",        tier:"required" },
+    { id:5,  title:"Let It Whip",                     artist:"Dazz Band",                             vibe:"Funk / Disco",   tier:"required" },
+    { id:6,  title:"Tennessee Whiskey",               artist:"Chris Stapleton",                       vibe:"Country",        tier:"required" },
+    { id:7,  title:"Disturbia",                       artist:"Rihanna",                               vibe:"Dance Pop",      tier:"required" },
+    { id:8,  title:"You",                             artist:"Lloyd",                                 vibe:"R&B / Neo-Soul", tier:"required" },
+    { id:9,  title:"PYT (Pretty Young Thing)",        artist:"Michael Jackson",                       vibe:"Funk / Disco",   tier:"required" },
+    { id:10, title:"Only You",                        artist:"112",                                   vibe:"90s R&B",        tier:"required" },
+    // Standard
+    { id:11, title:"Best Part",                       artist:"Daniel Caesar ft. H.E.R.",              vibe:"R&B / Neo-Soul", tier:"standard" },
+    { id:12, title:"Adorn",                           artist:"Miguel",                                vibe:"R&B / Neo-Soul", tier:"standard" },
+    { id:13, title:"Love On Top",                     artist:"Beyoncé",                               vibe:"R&B / Neo-Soul", tier:"standard" },
+    { id:14, title:"Crazy in Love",                   artist:"Beyoncé",                               vibe:"R&B / Neo-Soul", tier:"standard" },
+    { id:15, title:"Leave the Door Open",             artist:"Silk Sonic",                            vibe:"R&B / Neo-Soul", tier:"standard" },
+    { id:16, title:"Good Days",                       artist:"SZA",                                   vibe:"R&B / Neo-Soul", tier:"standard" },
+    { id:17, title:"Beautiful",                       artist:"Ne-Yo",                                 vibe:"R&B / Neo-Soul", tier:"standard" },
+    { id:18, title:"No Air",                          artist:"Jordin Sparks ft. Chris Brown",         vibe:"R&B / Neo-Soul", tier:"standard" },
+    { id:19, title:"Brown Skin Girl",                 artist:"Beyoncé ft. Blue Ivy & WizKid",         vibe:"R&B / Neo-Soul", tier:"standard" },
+    { id:20, title:"Confessions Part II",             artist:"Usher",                                 vibe:"R&B / Neo-Soul", tier:"standard" },
+    { id:21, title:"Beautiful Girls",                 artist:"Sean Kingston",                         vibe:"R&B / Neo-Soul", tier:"standard" },
+    { id:22, title:"Yeah!",                           artist:"Usher ft. Lil Jon & Ludacris",          vibe:"Hip-Hop",        tier:"standard" },
+    { id:23, title:"In My Feelings",                  artist:"Drake",                                 vibe:"Hip-Hop",        tier:"standard" },
+    { id:24, title:"One Dance",                       artist:"Drake",                                 vibe:"Hip-Hop",        tier:"standard" },
+    { id:25, title:"Hotline Bling",                   artist:"Drake",                                 vibe:"Hip-Hop",        tier:"standard" },
+    { id:26, title:"24K Magic",                       artist:"Bruno Mars",                            vibe:"Hip-Hop",        tier:"standard" },
+    { id:27, title:"Uptown Funk",                     artist:"Mark Ronson ft. Bruno Mars",            vibe:"Hip-Hop",        tier:"standard" },
+    { id:28, title:"Happy",                           artist:"Pharrell Williams",                     vibe:"Hip-Hop",        tier:"standard" },
+    { id:29, title:"No Diggity",                      artist:"Blackstreet ft. Dr. Dre",               vibe:"Hip-Hop",        tier:"standard" },
+    { id:30, title:"Jump Around",                     artist:"House of Pain",                         vibe:"Hip-Hop",        tier:"standard" },
+    { id:31, title:"Work It",                         artist:"Missy Elliott",                         vibe:"Hip-Hop",        tier:"standard" },
+    { id:32, title:"Low",                             artist:"Flo Rida ft. T-Pain",                   vibe:"Hip-Hop",        tier:"standard" },
+    { id:33, title:"Can't Stop the Feeling",          artist:"Justin Timberlake",                     vibe:"Dance Pop",      tier:"standard" },
+    { id:34, title:"SexyBack",                        artist:"Justin Timberlake",                     vibe:"Dance Pop",      tier:"standard" },
+    { id:35, title:"Rock Your Body",                  artist:"Justin Timberlake",                     vibe:"Dance Pop",      tier:"standard" },
+    { id:36, title:"Shake It Off",                    artist:"Taylor Swift",                          vibe:"Dance Pop",      tier:"standard" },
+    { id:37, title:"Levitating",                      artist:"Dua Lipa",                              vibe:"Dance Pop",      tier:"standard" },
+    { id:38, title:"Don't Start Now",                 artist:"Dua Lipa",                              vibe:"Dance Pop",      tier:"standard" },
+    { id:39, title:"Blinding Lights",                 artist:"The Weeknd",                            vibe:"Dance Pop",      tier:"standard" },
+    { id:40, title:"As It Was",                       artist:"Harry Styles",                          vibe:"Dance Pop",      tier:"standard" },
+    { id:41, title:"Good as Hell",                    artist:"Lizzo",                                 vibe:"Dance Pop",      tier:"standard" },
+    { id:42, title:"About Damn Time",                 artist:"Lizzo",                                 vibe:"Dance Pop",      tier:"standard" },
+    { id:43, title:"Crazy",                           artist:"Gnarls Barkley",                        vibe:"Dance Pop",      tier:"standard" },
+    { id:44, title:"September",                       artist:"Earth, Wind & Fire",                    vibe:"Funk / Disco",   tier:"standard" },
+    { id:45, title:"Dancing Queen",                   artist:"ABBA",                                  vibe:"Funk / Disco",   tier:"standard" },
+    { id:46, title:"Play That Funky Music",           artist:"Wild Cherry",                           vibe:"Funk / Disco",   tier:"standard" },
+    { id:47, title:"Superstition",                    artist:"Stevie Wonder",                         vibe:"Funk / Disco",   tier:"standard" },
+    { id:48, title:"Sir Duke",                        artist:"Stevie Wonder",                         vibe:"Funk / Disco",   tier:"standard" },
+    { id:49, title:"Got to Give It Up",               artist:"Marvin Gaye",                           vibe:"Funk / Disco",   tier:"standard" },
+    { id:50, title:"Love Train",                      artist:"The O'Jays",                            vibe:"Funk / Disco",   tier:"standard" },
+    { id:51, title:"I Want You Back",                 artist:"The Jackson 5",                         vibe:"Funk / Disco",   tier:"standard" },
+    { id:52, title:"Brick House",                     artist:"Commodores",                            vibe:"Funk / Disco",   tier:"standard" },
+    { id:53, title:"We Are Family",                   artist:"Sister Sledge",                         vibe:"Funk / Disco",   tier:"standard" },
+    { id:54, title:"Livin' on a Prayer",              artist:"Bon Jovi",                              vibe:"Classic Rock",   tier:"standard" },
+    { id:55, title:"Sweet Home Alabama",              artist:"Lynyrd Skynyrd",                        vibe:"Classic Rock",   tier:"standard" },
+    { id:56, title:"Africa",                          artist:"Toto",                                  vibe:"Classic Rock",   tier:"standard" },
+    { id:57, title:"Mr. Brightside",                  artist:"The Killers",                           vibe:"Classic Rock",   tier:"standard" },
+    { id:58, title:"Brown Eyed Girl",                 artist:"Van Morrison",                          vibe:"Classic Rock",   tier:"standard" },
+    { id:59, title:"Shout",                           artist:"Tears for Fears",                       vibe:"Classic Rock",   tier:"standard" },
+    { id:60, title:"Wonderful Tonight",               artist:"Eric Clapton",                          vibe:"Classic Rock",   tier:"standard" },
+    { id:61, title:"It Takes Two",                    artist:"Rob Base & DJ E-Z Rock",                vibe:"Classic Rock",   tier:"standard" },
+    { id:62, title:"No Scrubs",                       artist:"TLC",                                   vibe:"90s R&B",        tier:"standard" },
+    { id:63, title:"Waterfalls",                      artist:"TLC",                                   vibe:"90s R&B",        tier:"standard" },
+    { id:64, title:"End of the Road",                 artist:"Boyz II Men",                           vibe:"90s R&B",        tier:"standard" },
+    { id:65, title:"I'll Make Love to You",           artist:"Boyz II Men",                           vibe:"90s R&B",        tier:"standard" },
+    { id:66, title:"My Boo",                          artist:"Usher ft. Alicia Keys",                 vibe:"90s R&B",        tier:"standard" },
+    { id:67, title:"Back at One",                     artist:"Brian McKnight",                        vibe:"90s R&B",        tier:"standard" },
+    { id:68, title:"Say My Name",                     artist:"Destiny's Child",                       vibe:"90s R&B",        tier:"standard" },
+    { id:69, title:"This Is How We Do It",            artist:"Montell Jordan",                        vibe:"90s R&B",        tier:"standard" },
+    { id:70, title:"Die a Happy Man",                 artist:"Thomas Rhett",                          vibe:"Country",        tier:"standard" },
+    { id:71, title:"Better Together",                 artist:"Jack Johnson",                          vibe:"Country",        tier:"standard" },
+    { id:72, title:"Bless the Broken Road",           artist:"Rascal Flatts",                         vibe:"Country",        tier:"standard" },
+    { id:73, title:"Wagon Wheel",                     artist:"Darius Rucker",                         vibe:"Country",        tier:"standard" },
+    { id:74, title:"All of Me",                       artist:"John Legend",                           vibe:"Romantic",       tier:"standard" },
+    { id:75, title:"A Thousand Years",                artist:"Christina Perri",                       vibe:"Romantic",       tier:"standard" },
+    { id:76, title:"Perfect",                         artist:"Ed Sheeran",                            vibe:"Romantic",       tier:"standard" },
+    { id:77, title:"Thinking Out Loud",               artist:"Ed Sheeran",                            vibe:"Romantic",       tier:"standard" },
+    { id:78, title:"At Last",                         artist:"Etta James",                            vibe:"Romantic",       tier:"standard" },
+    { id:79, title:"Can't Help Falling in Love",      artist:"Elvis Presley",                         vibe:"Romantic",       tier:"standard" },
+    { id:80, title:"Die With You",                    artist:"Beyoncé",                               vibe:"Romantic",       tier:"standard" },
+    // Blending
+    { id:81, title:"Old Town Road",                   artist:"Lil Nas X ft. Billy Ray Cyrus",         vibe:"Country",        tier:"bridge" },
+    { id:82, title:"I Gotta Feeling",                 artist:"Black Eyed Peas",                       vibe:"Hip-Hop",        tier:"bridge" },
+    { id:83, title:"Smooth",                          artist:"Santana ft. Rob Thomas",                vibe:"Classic Rock",   tier:"bridge" },
+    { id:84, title:"Valerie",                         artist:"Mark Ronson ft. Amy Winehouse",         vibe:"R&B / Neo-Soul", tier:"bridge" },
+    { id:85, title:"Come and Get Your Love",          artist:"Redbone",                               vibe:"Funk / Disco",   tier:"bridge" },
+    { id:86, title:"The Way You Make Me Feel",        artist:"Michael Jackson",                       vibe:"R&B / Neo-Soul", tier:"bridge" },
+    { id:87, title:"Ain't No Mountain High Enough",   artist:"Marvin Gaye & Tammi Terrell",           vibe:"R&B / Neo-Soul", tier:"bridge" },
+    { id:88, title:"Moves Like Jagger",               artist:"Maroon 5",                              vibe:"Classic Rock",   tier:"bridge" },
+    // Extreme
+    { id:89, title:"HUMBLE.",                         artist:"Kendrick Lamar",                        vibe:"Hip-Hop",        tier:"extreme" },
+    { id:90, title:"Sicko Mode",                      artist:"Travis Scott ft. Drake",                vibe:"Hip-Hop",        tier:"extreme" },
+    { id:91, title:"Power",                           artist:"Kanye West",                            vibe:"Hip-Hop",        tier:"extreme" },
+    { id:92, title:"Jolene",                          artist:"Dolly Parton",                          vibe:"Country",        tier:"extreme" },
+    { id:93, title:"Friends in Low Places",           artist:"Garth Brooks",                          vibe:"Country",        tier:"extreme" },
+    { id:94, title:"The House That Built Me",         artist:"Miranda Lambert",                       vibe:"Country",        tier:"extreme" },
+    { id:95, title:"Back in Black",                   artist:"AC/DC",                                 vibe:"Classic Rock",   tier:"extreme" },
+    { id:96, title:"Welcome to the Jungle",           artist:"Guns N' Roses",                         vibe:"Classic Rock",   tier:"extreme" },
+    { id:97, title:"Pour Some Sugar on Me",           artist:"Def Leppard",                           vibe:"Classic Rock",   tier:"extreme" },
+    { id:98, title:"Thunderstruck",                   artist:"AC/DC",                                 vibe:"Classic Rock",   tier:"extreme" },
+    { id:99, title:"Give Up the Funk",                artist:"Parliament",                            vibe:"Funk / Disco",   tier:"extreme" },
+    { id:100,title:"Try a Little Tenderness",         artist:"Otis Redding",                          vibe:"Funk / Disco",   tier:"extreme" },
+  ];
+
+  const vibes = ["All","R&B / Neo-Soul","Hip-Hop","Dance Pop","Funk / Disco","Classic Rock","90s R&B","Country","Romantic"];
+  const tiers = [
+    { value:"all",      label:"All Tiers",  cls:""        },
+    { value:"required", label:"Required",   cls:"blue"    },
+    { value:"standard", label:"Standard",   cls:""        },
+    { value:"bridge",   label:"Blending",   cls:"green"   },
+    { value:"extreme",  label:"Extreme",    cls:"yellow"  },
+  ];
+
+  let activeVibe = "All";
+  let activeTier = "all";
+
+  function buildPills(container, items, getValue, getLabel, getCls, onClick, isActive) {
+    container.innerHTML = "";
+    items.forEach(item => {
+      const btn = document.createElement("button");
+      btn.className = "pill" + (isActive(item) ? " active" : "") + (getCls(item) ? " " + getCls(item) : "");
+      btn.textContent = getLabel(item);
+      btn.addEventListener("click", () => onClick(item));
+      container.appendChild(btn);
+    });
+  }
+
+  function rowClass(tier) {
+    if (tier === "required") return "req";
+    if (tier === "bridge")   return "bri";
+    if (tier === "extreme")  return "ext";
+    return "";
+  }
+
+  function render() {
+    const filtered = songs.filter(s => {
+      const vibeOk = activeVibe === "All" || s.vibe === activeVibe;
+      const tierOk = activeTier === "all" || s.tier === activeTier;
+      return vibeOk && tierOk;
+    });
+
+    const tbody = document.getElementById("song-tbody");
+    const noResults = document.getElementById("no-results");
+    const count = document.getElementById("result-count");
+
+    count.textContent = filtered.length + " of 100 shown";
+
+    if (filtered.length === 0) {
+      tbody.innerHTML = "";
+      noResults.style.display = "block";
+    } else {
+      noResults.style.display = "none";
+      tbody.innerHTML = filtered.map((s, i) =>
+        `<tr class="${rowClass(s.tier)}">
+          <td class="td-num">${s.id}</td>
+          <td>${s.title}</td>
+          <td>${s.artist}</td>
+          <td class="td-vibe">${s.vibe}</td>
+        </tr>`
+      ).join("");
+    }
+
+    buildPills(
+      document.getElementById("vibe-pills"),
+      vibes,
+      v => v, v => v, () => "",
+      v => { activeVibe = v; render(); },
+      v => v === activeVibe
+    );
+
+    buildPills(
+      document.getElementById("tier-pills"),
+      tiers,
+      t => t.value, t => t.label, t => t.cls,
+      t => { activeTier = t.value; render(); },
+      t => t.value === activeTier
+    );
+  }
+
+  render();
+</script>
+</body>
+</html>
